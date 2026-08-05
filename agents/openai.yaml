@@ -1,0 +1,4 @@
+interface:
+  display_name: "夕小瑶 AI 网站上线助手"
+  short_description: "帮助普通用户创建或复用项目，并完成网站部署与域名绑定"
+  default_prompt: "使用 $xixiaoyao-website-launcher 创建或部署一个网站，并引导我完成 GitHub、Vercel 和域名配置。"

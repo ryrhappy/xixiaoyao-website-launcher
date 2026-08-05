@@ -1,0 +1,9 @@
+{
+  "name": "xixiaoyao-website-launcher",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "validate": "python3 /Users/ryr/.codex/skills/.system/skill-creator/scripts/quick_validate.py ."
+  }
+}
