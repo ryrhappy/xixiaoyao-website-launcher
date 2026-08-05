@@ -1,13 +1,15 @@
 ---
 name: xixiaoyao-website-launcher
-description: Use when a non-technical user wants to create a website, continue an existing website project, publish code to GitHub, deploy to Vercel, connect a custom domain, or decide whether Supabase is needed.
+description: Use when a non-technical user wants to deploy an existing website, or has no project and needs a guided starter before publishing through GitHub, Vercel, and a custom domain.
 ---
 
 # 夕小瑶 AI 网站上线助手
 
 ## Overview
 
-Guide a non-technical user from an idea or existing project to a verified website. Preserve existing work, use the fixed versioned starter only for new projects, and stop at every account, payment, secret, public-repository, production, and DNS boundary that requires the user's action or confirmation.
+This is a deployment-first guide. Its main job is to take a website project through local verification, GitHub, Vercel, and an optional custom domain. If a project already exists, deploy it directly. Only when no project exists, create one from the fixed versioned starter and then return to the same deployment workflow.
+
+Stop at every account, payment, secret, public-repository, production, and DNS boundary that requires the user's action or confirmation.
 
 ## Non-negotiable rules
 
@@ -21,9 +23,33 @@ Guide a non-technical user from an idea or existing project to a verified websit
 - Do not promise that every website is compatible with Vercel. Explain the concrete blocker and recommend another host when adaptation would materially change the architecture.
 - Build and preview locally before GitHub; verify a preview deployment before production; verify production before connecting a domain.
 
-## Workflow
+## Route first
 
-### 1. Check the environment
+Resolve the project directory and inspect it before asking broad website questions. Use the inspection result, not the user's technical vocabulary.
+
+### Existing project
+
+If the directory contains a project, say clearly that it will be deployed as-is. Keep its framework, package manager, Git history, lockfile, configuration, and unrelated changes. Identify its build command and Vercel compatibility, then enter the shared deployment workflow.
+
+Do not ask about pages, style, content, or a database unless the user also asks to change the website or deployment is blocked. Ask only for information required to deploy, such as the project path, missing environment-variable names, GitHub visibility, Vercel account action, or domain choice.
+
+### New project
+
+If the user has no project, explain that the Skill will first create the smallest usable project and then deploy it. Ask only for the minimum information needed to replace the starter content: project name, website purpose, essential page or action, and any real text or images already available.
+
+Confirm an absent or empty absolute directory, then run:
+
+```bash
+node <skill-dir>/scripts/download-template.mjs "<new-empty-directory>"
+```
+
+The default source is the tested `v1.0.0` tag of `ryrhappy/xixiaoyao-nextjs-starter`. Do not download `main`. If the tag cannot be fetched, explain the failure and offer `create-next-app` as a fallback. Retain the starter's Next.js, React, TypeScript, App Router, Tailwind CSS, responsive, metadata, and 404 foundations. Replace only the generic content needed for the user's first usable version, then immediately continue with the shared deployment workflow.
+
+For new features that require login, saved forms, comments, uploads, collections, or an admin panel, recommend Supabase and read `references/supabase.md`. Do not introduce a database for a static site or simple deployment. A simple email contact form may use a form or email service instead.
+
+## Shared deployment workflow
+
+### 1. Check the environment and project
 
 Run:
 
@@ -32,57 +58,19 @@ node <skill-dir>/scripts/check-environment.mjs
 node <skill-dir>/scripts/inspect-project.mjs "<project-directory>"
 ```
 
-Git, Node.js, and npm are required for the default new-project path. GitHub CLI is needed when creating or pushing a repository. Use `npx vercel` when a global Vercel CLI is absent.
+GitHub CLI is needed when creating or pushing a repository. Use `npx vercel` when a global Vercel CLI is absent. Node.js and npm are required for the default starter; for an existing project, respect its detected runtime and package manager.
 
 If a required tool is missing, explain what it is and give the official installation path for the user's operating system. Resume only after rechecking.
 
-### 2. Choose new or existing project
-
-Use the inspection result, not the user's technical vocabulary.
-
-**New project:** The target directory is absent or empty. Confirm its absolute location and name, then run:
-
-```bash
-node <skill-dir>/scripts/download-template.mjs "<new-empty-directory>"
-```
-
-The default source is the tested `v1.0.0` tag of `ryrhappy/xixiaoyao-nextjs-starter`. Do not download `main`. If the tag cannot be fetched, explain the failure and offer `create-next-app` as a fallback.
-
-**Existing project:** Keep its framework, package manager, Git history, lockfile, and unrelated changes. Identify the current build command and run it before proposing Vercel changes. Show the user any required compatibility edit before applying it.
-
-### 3. Clarify the website
-
-Ask only what changes the implementation:
-
-1. What is the website for, and who should use it?
-2. Which pages and actions are essential?
-3. What real text, images, links, and identity details are available?
-4. Does the visitor need to sign in or submit information that must be saved?
-5. Is there already a domain?
-
-Do not invent biography, clients, results, testimonials, prices, or personal testing. Use clearly labeled placeholders when material is missing.
-
-### 4. Decide whether a database is needed
-
-Do not ask “Do you need a database?” first. Ask whether visitors need login, saved forms, comments, uploads, collections, or an admin panel.
-
-- No persistent data: continue without a database.
-- Persistent data: recommend Supabase and read `references/supabase.md` before changing the project.
-- Simple email contact: explain that a full database may be unnecessary and offer a form/email service instead.
-
-### 5. Implement and verify locally
-
-For a new project, retain the starter's Next.js, React, TypeScript, App Router, Tailwind CSS, local/system-font, responsive, metadata, and 404 foundations. Replace its generic content according to the approved brief.
-
-For any project:
+### 2. Verify locally
 
 1. Install with the detected package manager and existing lockfile.
 2. Run lint, typecheck, tests, and production build when scripts exist.
 3. Start the documented preview command.
-4. Ask the user to approve content, appearance, mobile layout, and public contact details.
+4. For a newly created or intentionally modified site, ask the user to approve content, appearance, mobile layout, and public contact details.
 5. Fix errors before continuing. Never treat a successful install as a successful build.
 
-### 6. Publish to GitHub
+### 3. Publish to GitHub
 
 Read `references/github.md`. Before creating an external repository, confirm the repository name and public/private visibility. Preserve existing remotes and history. Show `git status` and run:
 
@@ -92,19 +80,19 @@ node <skill-dir>/scripts/verify-project.mjs "<project-directory>"
 
 Review every flagged file. A clean result permits review and staging; it does not prove that file contents are secret-free. Inspect the staged diff before commit and push.
 
-### 7. Deploy to Vercel
+### 4. Deploy to Vercel
 
 Read `references/vercel.md`. Prefer Git-connected deployment so future pushes redeploy automatically. Use a preview deployment first. Configure environment variables in Vercel, not source files. Verify the homepage, routes, assets, forms/API calls, logs, and mobile view before production.
 
 After production succeeds, change one harmless sentence, push it, and confirm that Vercel deploys the update. This proves the maintenance loop.
 
-### 8. Connect a domain
+### 5. Connect a domain
 
 Read `references/domain.md`. Do not require a particular registrar. Let the user buy or reuse a domain. Read the DNS values shown for the actual Vercel project; do not copy fixed A/CNAME values from an old tutorial.
 
 If Vercel hosts DNS, `vercel dns` may manage records. Otherwise the user must change records at their registrar. Verify apex, `www`, redirects, HTTPS, and DNS status.
 
-### 9. Handoff
+### 6. Handoff
 
 Return:
 
