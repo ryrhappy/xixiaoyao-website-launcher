@@ -29,3 +29,10 @@ test("does not add mainland-China commentary to domain handoff", () => {
   assert.doesNotMatch(domain, /mainland|China|中国大陆|备案/i);
   assert.doesNotMatch(skill, /Costs, unresolved warnings, and mainland-China access boundary/i);
 });
+
+test("defaults to the cheapest first-year domain across suffixes", () => {
+  assert.match(domain, /Default “cheapest” to the lowest current first registration charge without restricting the suffix/i);
+  assert.match(domain, /Do not ask the user to choose between first-year and long-term cost unless they request a different definition/i);
+  assert.match(domain, /sort_by\(\.purchasePrice, \.renewalPrice\)/i);
+  assert.match(domain, /show the renewal charge beside every first-year price/i);
+});

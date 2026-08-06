@@ -87,7 +87,7 @@ After production succeeds, change one harmless sentence, push it, and confirm th
 
 ### 5. Connect a domain
 
-Read `references/domain.md`. If the user has no domain, guide domain search, purchase, and binding instead of stopping to ask them to buy one independently. Offer only Vercel Domains and GoDaddy, compare live availability plus purchase and renewal prices, and provide the official purchase page. The user must complete login, registrant details, payment, terms, and verification.
+Read `references/domain.md`. If the user has no domain, guide domain search, purchase, and binding instead of stopping to ask them to buy one independently. When the user asks for a recommendation or the cheapest option, search across available suffixes and put the lowest current first-year price first, using renewal price as the tie-breaker. Offer only Vercel Domains and GoDaddy, compare live availability plus purchase and renewal prices, and provide the official purchase page. The user must complete login, registrant details, payment, terms, and verification.
 
 After purchase, resume the workflow without requiring the user to restate the task. Add the actual domain to the actual Vercel project, read its current DNS requirements, and guide the required DNS change. Verify the apex domain, `www`, chosen redirect, certificate, HTTPS, and DNS status.
 

@@ -5,25 +5,32 @@ Complete this workflow even when the user starts without a domain. Do not stop a
 ## 1. Determine the starting point
 
 - Already owns a domain: ask for the exact domain and where it was purchased, then continue at binding.
-- Has no domain: ask for the desired name or keyword and preferred suffix. If the user has no suffix preference, check `.com` first and offer nearby available alternatives.
+- Has no domain: ask for the desired name or keyword. Ask for a suffix only when the user expresses a preference; otherwise search across suffixes.
 
 ## 2. Search availability and current prices
 
-Use current results; never quote a stored price. Prefer a recent Vercel CLI with domain search support:
+Use current results; never quote a stored price. Default “cheapest” to the lowest current first registration charge without restricting the suffix. Do not ask the user to choose between first-year and long-term cost unless they request a different definition. Show the renewal charge beside every first-year price so the trade-off remains visible.
+
+Prefer a recent Vercel CLI with domain search support. Request the largest supported page, follow pagination when present, and sort the returned JSON locally because CLI versions may not support price ordering:
 
 ```bash
-vercel domains search <keyword> --available --limit 10
-vercel domains search <keyword> --tld com --available
+vercel domains search <keyword> --available --limit 200 --format json
+# Merge additional pages returned by --next before sorting.
+vercel domains search <keyword> --available --next <cursor> --format json
+# After merging all result arrays:
+jq '.results | sort_by(.purchasePrice, .renewalPrice)' domains.json
 vercel domains price <exact-domain>
 ```
 
-If `domains search` is unavailable, update the CLI or use the official purchase pages. Present 3–5 readable candidates and show, when available:
+If `domains search` is unavailable, use `npx --yes vercel@latest` or the official purchase pages without changing the user's global CLI. Recheck the cheapest shortlisted exact domains on both allowed purchase routes when prices are visible. Present 3–5 candidates, starting with the absolute lowest observed first-year price even when its suffix is unconventional. Show, when available:
 
 - exact domain
 - availability at the time checked
 - first registration charge and term
 - renewal charge and term
 - currency, tax, premium-domain, and WHOIS-privacy notes
+
+When first-year prices tie, sort by the lower renewal charge, then the shorter domain. Label the result as the cheapest among the live candidates and purchase routes actually checked; do not claim it is the cheapest across registrars that were not checked.
 
 Offer only these purchase routes:
 
