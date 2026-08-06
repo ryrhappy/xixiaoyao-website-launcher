@@ -1,6 +1,6 @@
 ---
 name: xixiaoyao-website-launcher
-description: Use when a non-technical user wants to deploy an existing website, or has no project and needs a guided starter before publishing through GitHub, Vercel, and a custom domain.
+description: Use when a non-technical user wants to create or deploy a website, publish it through GitHub and Vercel, purchase a domain, configure DNS, or connect a custom domain.
 ---
 
 # 夕小瑶 AI 网站上线助手
@@ -19,7 +19,6 @@ Stop at every account, payment, secret, public-repository, production, and DNS b
 - Never request passwords, access tokens, API keys, database passwords, or cookies in chat.
 - Never commit `.env*` except `.env.example`. Run `scripts/verify-project.mjs` before staging.
 - Do not buy a domain, accept terms, solve a CAPTCHA, or approve a paid operation for the user.
-- Do not claim that Vercel guarantees reliable access from mainland China.
 - Do not promise that every website is compatible with Vercel. Explain the concrete blocker and recommend another host when adaptation would materially change the architecture.
 - Build and preview locally before GitHub; verify a preview deployment before production; verify production before connecting a domain.
 
@@ -88,9 +87,9 @@ After production succeeds, change one harmless sentence, push it, and confirm th
 
 ### 5. Connect a domain
 
-Read `references/domain.md`. Do not require a particular registrar. Let the user buy or reuse a domain. Read the DNS values shown for the actual Vercel project; do not copy fixed A/CNAME values from an old tutorial.
+Read `references/domain.md`. If the user has no domain, guide domain search, purchase, and binding instead of stopping to ask them to buy one independently. Offer only Vercel Domains and GoDaddy, compare live availability plus purchase and renewal prices, and provide the official purchase page. The user must complete login, registrant details, payment, terms, and verification.
 
-If Vercel hosts DNS, `vercel dns` may manage records. Otherwise the user must change records at their registrar. Verify apex, `www`, redirects, HTTPS, and DNS status.
+After purchase, resume the workflow without requiring the user to restate the task. Add the actual domain to the actual Vercel project, read its current DNS requirements, and guide the required DNS change. Verify the apex domain, `www`, chosen redirect, certificate, HTTPS, and DNS status.
 
 ### 6. Handoff
 
@@ -102,7 +101,7 @@ Return:
 - Custom domain and HTTPS status
 - Database/provider status when applicable
 - Commands for future edits
-- Costs, unresolved warnings, and mainland-China access boundary
+- Domain purchase, renewal, DNS, and unresolved cost warnings
 
 ## Supported first-version scope
 
@@ -126,6 +125,6 @@ Escalate instead of promising: complex commerce, payments, real-time chat, video
 
 - GitHub authentication and safe publishing: `references/github.md`
 - Vercel compatibility and deployment: `references/vercel.md`
-- Domain choices, DNS, and mainland access: `references/domain.md`
+- Domain purchase, DNS, and binding: `references/domain.md`
 - Optional Supabase branch: `references/supabase.md`
 - Common failures and recovery: `references/troubleshooting.md`
