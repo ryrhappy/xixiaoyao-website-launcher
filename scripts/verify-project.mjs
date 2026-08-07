@@ -2,7 +2,7 @@
 import { existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 
-const ignoredDirectories = new Set([".git", ".next", ".vercel", "node_modules", "dist", "build"]);
+const ignoredDirectories = new Set([".git", ".next", ".netlify", "node_modules", "dist", "build"]);
 const sensitiveNames = [/^\.env$/, /^\.env\.(?!example$).+/, /service[-_]?account.*\.json$/i, /credentials.*\.json$/i];
 
 export function findSensitiveFiles(directory, current = directory) {

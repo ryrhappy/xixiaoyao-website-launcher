@@ -11,7 +11,7 @@ test("reports required and optional commands separately", () => {
         "node --version": { ok: true, output: "v22.17.0" },
         "npm --version": { ok: true, output: "10.9.2" },
         "gh --version": { ok: false, output: "not found" },
-        "vercel --version": { ok: false, output: "not found" },
+        "netlify --version": { ok: false, output: "not found" },
       };
       return outputs[command];
     },
@@ -19,5 +19,8 @@ test("reports required and optional commands separately", () => {
 
   assert.equal(result.readyForLocalBuild, true);
   assert.equal(result.tools.gh.required, false);
-  assert.equal(result.tools.vercel.fallback, "npx vercel");
+  assert.equal(
+    result.tools.netlify.fallback,
+    "npm exec --yes --package=netlify-cli@latest -- netlify",
+  );
 });

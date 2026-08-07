@@ -1,105 +1,43 @@
-# Domain purchase and binding
+# Netlify address and existing custom domain
 
-Complete this workflow even when the user starts without a domain. Do not stop at “buy a domain and come back.” Ask one short question at a time and retain the Vercel project already identified earlier in the conversation.
+The deployment must not depend on the user having a custom domain. Ask only whether they already own one and want to use it.
 
-## 1. Determine the starting point
+## No custom domain
 
-- Already owns a domain: ask for the exact domain and where it was purchased, then continue at binding.
-- Has no domain: ask for the desired name or keyword. Ask for a suffix only when the user expresses a preference; otherwise search across suffixes.
+Do not start a domain-purchase workflow. Keep the default `<site-name>.netlify.app` address and verify that it loads over HTTPS. If the generated site name is hard to read, offer to rename the Netlify project to an available, readable name before handoff.
 
-## 2. Search availability and current prices
+## Existing custom domain
 
-Use current results; never quote a stored price. Default “cheapest” to the lowest current first registration charge without restricting the suffix. Do not ask the user to choose between first-year and long-term cost unless they request a different definition. Show the renewal charge beside every first-year price so the trade-off remains visible.
+Only enter this branch when the user confirms that the domain is already theirs and asks to connect it.
 
-Prefer a recent Vercel CLI with domain search support. Request the largest supported page, follow pagination when present, and sort the returned JSON locally because CLI versions may not support price ordering:
+1. Open the actual Netlify project.
+2. Go to **Domain management**.
+3. Choose **Add a domain** and then **Add a domain you already own**.
+4. Enter the exact domain and confirm the project selected by Netlify.
+5. Choose whether the apex name or `www` should be primary.
+6. Follow the current DNS records displayed by Netlify at the DNS service that already manages the domain.
 
-```bash
-vercel domains search <keyword> --available --limit 200 --format json
-# Merge additional pages returned by --next before sorting.
-vercel domains search <keyword> --available --next <cursor> --format json
-# After merging all result arrays:
-jq '.results | sort_by(.purchasePrice, .renewalPrice)' domains.json
-vercel domains price <exact-domain>
-```
+Never copy fixed record values from an old tutorial. Preserve MX, email verification, and unrelated records. Before replacing a conflicting website record, explain what currently uses it and obtain confirmation.
 
-If `domains search` is unavailable, use `npx --yes vercel@latest` or the official purchase pages without changing the user's global CLI. Recheck the cheapest shortlisted exact domains on both allowed purchase routes when prices are visible. Present 3–5 candidates, starting with the absolute lowest observed first-year price even when its suffix is unconventional. Show, when available:
+## Verify the observed result
 
-- exact domain
-- availability at the time checked
-- first registration charge and term
-- renewal charge and term
-- currency, tax, premium-domain, and WHOIS-privacy notes
+Netlify may temporarily show **Pending DNS verification** while records update. Report that state as pending rather than complete.
 
-When first-year prices tie, sort by the lower renewal charge, then the shorter domain. Label the result as the cheapest among the live candidates and purchase routes actually checked; do not claim it is the cheapest across registrars that were not checked.
+Verify:
 
-Offer only these purchase routes:
+- the chosen primary name opens the production site
+- the secondary name redirects as intended when configured
+- Netlify reports the domain as configured
+- HTTPS works without a certificate warning
+- existing email-related records remain intact
 
-- [Vercel Domains](https://vercel.com/domains): simplest for a Vercel site because Vercel configures its nameservers and renewals.
-- [GoDaddy domain search](https://www.godaddy.com/domains/domain-name-search): third-party purchase; DNS remains in GoDaddy unless the user later changes nameservers.
-
-Do not imply that availability or price is reserved until checkout succeeds.
-
-## 3. Purchase and account boundary
-
-Ask the user to choose the exact domain and purchase route. Before checkout, repeat the exact domain, observed first charge, observed renewal charge, and auto-renewal state.
-
-The user must personally:
-
-- sign in or create the registrar account
-- provide registrant/contact details
-- accept registration terms
-- complete CAPTCHA, email verification, two-factor authentication, and payment
-- confirm the final checkout total and auto-renewal setting
-
-Never request credentials, payment details, verification codes, or registrant identity in chat. Do not run `vercel domains buy` or approve another paid action for the user. Provide the official purchase link and wait for the user to confirm that the domain now appears in their account.
-
-Resume immediately after the user confirms ownership. Do not ask them to repeat the Vercel project or the deployment request.
-
-## 4. Bind the purchased or existing domain
-
-Confirm which address is primary: `example.com` or `www.example.com`. Add both to the actual project:
+Useful checks:
 
 ```bash
-vercel domains add example.com <project>
-vercel domains add www.example.com <project>
-vercel domains inspect example.com
-vercel domains inspect www.example.com
-```
-
-Use the records returned for this project at this moment. Never copy fixed A or CNAME values from an old tutorial.
-
-### Vercel Domains
-
-Vercel normally configures nameservers for domains bought through Vercel. Inspect both names, attach them to the project, select the primary address in Project Settings, and configure the other to redirect to it. Do not create duplicate records when Vercel already manages them.
-
-### GoDaddy
-
-Keep the user's GoDaddy DNS zone unless they explicitly choose to change nameservers. Show the exact host, record type, value, and any record that must be removed. Guide the user through GoDaddy's DNS management page; the user completes login, two-factor authentication, and the final save. Vercel CLI cannot change a GoDaddy-hosted DNS zone.
-
-Before replacing an existing record, explain what currently uses it. Do not remove MX or email-verification records while connecting a website.
-
-## 5. Verify and continue checking
-
-Check observed state instead of declaring success from a saved form:
-
-```bash
-vercel domains inspect example.com
-vercel domains inspect www.example.com
 dig +short example.com
 dig +short www.example.com
 curl -I https://example.com
 curl -I https://www.example.com
 ```
 
-Verify:
-
-- apex and `www` both resolve
-- the selected primary domain serves the production deployment
-- the secondary address redirects to the primary address
-- Vercel reports valid configuration
-- HTTPS certificates work for both names
-- existing email-related DNS records remain intact
-
-DNS propagation may take time. If it is pending, report the current result and the next check; do not claim completion prematurely.
-
-Official references: [Vercel domain CLI](https://vercel.com/docs/cli/domains), [working with Vercel domains](https://vercel.com/docs/domains/working-with-domains), [Vercel DNS CLI](https://vercel.com/docs/cli/dns), [GoDaddy domain search](https://www.godaddy.com/domains/domain-name-search).
+Official references: [Netlify default subdomain](https://docs.netlify.com/manage/domains/domains-fundamentals/understand-domains/), [assign a domain to a project](https://docs.netlify.com/manage/domains/manage-domains/assign-a-domain-to-your-site-app/), [external DNS](https://docs.netlify.com/manage/domains/configure-domains/configure-external-dns/).

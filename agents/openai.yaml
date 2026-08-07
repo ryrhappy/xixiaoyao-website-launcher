@@ -1,4 +1,4 @@
 interface:
   display_name: "夕小瑶 AI 网站上线助手"
-  short_description: "创建或部署网站，并引导购买域名、配置 DNS 和完成绑定"
-  default_prompt: "使用 $xixiaoyao-website-launcher 帮我创建或部署网站，并在没有域名时继续引导我查询、购买和绑定域名，完成 GitHub、Vercel、DNS 与 HTTPS 验证。"
+  short_description: "创建或部署网站，通过 GitHub 与 Netlify 正式上线"
+  default_prompt: "使用 $xixiaoyao-website-launcher 帮我创建或部署网站，完成 GitHub、Netlify 预览、正式上线与持续部署；没有域名就使用免费地址，已有域名再帮我绑定。"

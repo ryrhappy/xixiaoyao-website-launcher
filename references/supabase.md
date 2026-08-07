@@ -12,7 +12,7 @@ Tell the user that Supabase is a separate service with its own account, region, 
 - Use the browser-safe publishable/anon key only with correct policies.
 - Keep `service_role`, database password, and OAuth secrets server-side.
 - Never prefix a server secret with `NEXT_PUBLIC_`.
-- Store local values in `.env.local`, production values in Vercel, and placeholders in `.env.example`.
+- Store local values in `.env.local`, production values in Netlify, and placeholders in `.env.example`.
 - Use separate Preview and Production projects or data when preview writes would be risky.
 
 ## Integration order
@@ -21,7 +21,7 @@ Tell the user that Supabase is a separate service with its own account, region, 
 2. Define who may read and write each row.
 3. Create policies and constraints before exposing forms.
 4. Add the application client and server integration.
-5. Configure local and Vercel environment variables.
+5. Configure local and Netlify environment variables.
 6. Test unauthenticated access and cross-user isolation.
 7. Configure OAuth redirect URLs only when social login is requested.
 

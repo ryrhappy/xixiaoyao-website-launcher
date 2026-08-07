@@ -15,7 +15,11 @@ export function checkEnvironment({ platform = process.platform, run = defaultRun
     node: { command: "node --version", required: true },
     npm: { command: "npm --version", required: true },
     gh: { command: "gh --version", required: false },
-    vercel: { command: "vercel --version", required: false, fallback: "npx vercel" },
+    netlify: {
+      command: "netlify --version",
+      required: false,
+      fallback: "npm exec --yes --package=netlify-cli@latest -- netlify",
+    },
   };
   const tools = {};
   for (const [name, definition] of Object.entries(definitions)) {
